@@ -1,3 +1,4 @@
+//extracted data
 var entities = [
     {
       "type": "City",
@@ -101,8 +102,64 @@ var entities = [
     }
   ];
 
-  function decorateContent(el){
+  var parent_wrapper = 'overwrite-container';
+  //add event listener which detects any entity elements
+  document.getElementsByClassName(parent_wrapper)[0].addEventListener("mouseover", showTooltip);
+  document.getElementsByClassName(parent_wrapper)[0].addEventListener("mouseout", hideTooltip);
 
+  function showTooltip(e) {
+     if (e.target.className == 'entity'){
+       //display tooltip if tooltip exists inside DOM, otherwise build it
+       if (hasTooltip(e.target)) {
+         showHideTooltip(e.target, 'show');
+       } else {
+         var tooltip = createTooltip(e.target.getAttribute('entity-id'));
+         e.target.appendChild(tooltip);
+       }
+     }
+  }
+
+  function hideTooltip(e) {
+    if (e.target.className == 'entity') {
+      if (hasTooltip(e.target)) {
+        //find and hide tooltip
+        showHideTooltip(e.target, 'hide');
+      }
+    }
+  }
+
+  function hasTooltip(el) {
+    if (el.hasChildNodes()) {
+      var children = [].slice.call(el.childNodes);
+      for (i in children) {
+        if (children[i].className == 'tagible-tooltip') {
+           return true;
+        }
+      }
+      return false;
+    } else {
+      return false;
+    }
+  }
+
+  function showHideTooltip(el, action) {
+    var display = (action == 'show') ? 'block' : 'none';
+    var children = [].slice.call(el.childNodes);
+    for (i in children) {
+        if (children[i].className == 'tagible-tooltip') {
+           children[i].style.display = display;
+        }
+    }
+  }
+
+  function createTooltip(id) {
+    var tooltip = document.createElement('div');
+      tooltip.className = 'tagible-tooltip';
+      tooltip.innerHTML = '<span class="contents">' + entities[id].type + '</span>';
+      tooltip.style.display = 'block';
+      tooltip.style.position = 'relative';
+
+    return tooltip;
   }
 
   function searchForEntities(el) {
@@ -113,9 +170,9 @@ var entities = [
     for (var i in entities) {
       //for each entity locate the matching text and wrap the text in a span
       var re = new RegExp(entities[i].text, "g");
-      content = content.replace(re, '<span class="entity">' + entities[i].text + '</span>');
+      content = content.replace(re, '<span class="entity" entity-id="'+ i +'">' + entities[i].text + '</span>');
     }
-    wrapper[0].innerHTML = content;
+    document.getElementsByClassName(el)[0].innerHTML = content;
   }
 
-  searchForEntities('overwrite-container');
+  searchForEntities(parent_wrapper);
