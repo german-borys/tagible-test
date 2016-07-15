@@ -107,11 +107,15 @@ var entities = [
 
   function searchForEntities(el) {
     //grab the container element and convert the nodelist to array
-    var wrapper = [].slice.call(document.getElementsByClassName(el), 0);
+    var wrapper = document.getElementsByClassName(el);
+    var content = wrapper[0].innerHTML;
 
-    return wrapper;
+    for (var i in entities) {
+      //for each entity locate the matching text and wrap the text in a span
+      var re = new RegExp(entities[i].text, "g");
+      content = content.replace(re, '<span class="entity">' + entities[i].text + '</span>');
+    }
+    wrapper[0].innerHTML = content;
   }
 
-  console.log("Tagible Script is embedded");
-  var wrapper = searchForEntities('overwrite-container');
-  console.log(wrapper);
+  searchForEntities('overwrite-container');
