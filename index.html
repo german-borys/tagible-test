@@ -10,6 +10,47 @@
         border-bottom: 1px dotted #E64320;
         cursor: pointer;
       }
+      .tagible-tooltip {
+        background-color: white;
+        box-shadow: 0px 0px 4px 1px #cecece;
+        -moz-box-shadow: 0px 0px 4px 1px #cecece;
+        -webkit-box-shadow: 0px 0px 4px 1px #cecece;
+        padding: 5px 5px 10px 5px;
+        z-index: 100;
+      }
+      .tagible-tooltip::after{
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        margin-left: -0.5em;
+        bottom: -0.9em;
+        left: 20%;
+        box-sizing: border-box;
+        border: 7px solid white;
+        border-color: transparent transparent white white;
+        transform-origin: 0 0;
+        transform: rotate(-45deg);
+        box-shadow: -1px 2px 2px 0px #cecece;
+        -moz-box-shadow: -1px 2px 2px 0px #cecece;
+        -webkit-box-shadow: -1px 2px 2px 0px #cecece;
+      }
+      .media-wrapper {
+        float:left;
+        height: 45px;
+        width: 50px;
+        margin:5px;
+        font-size: 10px;
+        color: red;
+        text-align: center;
+        font-weight: 600;
+      }
+      .rect {
+        display: block;
+        height:40px;
+        width: 50px;
+        background-color: #eee;
+      }
     </style>
   </head>
   <body>

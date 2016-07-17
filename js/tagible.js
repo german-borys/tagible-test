@@ -113,7 +113,7 @@ var entities = [
        if (hasTooltip(e.target)) {
          showHideTooltip(e.target, 'show');
        } else {
-         var tooltip = createTooltip(e.target.getAttribute('entity-id'));
+         var tooltip = createTooltip(e.target);
          e.target.appendChild(tooltip);
        }
      }
@@ -152,13 +152,20 @@ var entities = [
     }
   }
 
-  function createTooltip(id) {
-    var tooltip = document.createElement('div');
-      tooltip.className = 'tagible-tooltip';
-      tooltip.innerHTML = '<span class="contents">' + entities[id].type + '</span>';
-      tooltip.style.display = 'block';
-      tooltip.style.position = 'relative';
+  function createTooltip(el) {
+    var tooltip = document.createElement('div'),
+      id = el.getAttribute('entity-id'),
+      width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      console.log("Screen Width: " + width);
+      console.log("Left: " + el.offsetLeft);
+      console.log("Top: " + el.offsetTop);
 
+      tooltip.className = 'tagible-tooltip';
+      tooltip.innerHTML = '<div class="contents"><div class="media-wrapper"><span class="rect"></span>VIDEOS</div><div class="media-wrapper"><span class="rect"></span>PHOTOS</div><div class="media-wrapper"><span class="rect"></span>3D VIEWS</div></div>';
+      tooltip.style.display = 'block';
+      tooltip.style.position = 'absolute';
+      tooltip.style.top = (el.offsetTop - 80) + 'px';
+      tooltip.style.left = (el.offsetLeft + 5) + 'px';
     return tooltip;
   }
 
