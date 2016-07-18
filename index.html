@@ -11,6 +11,8 @@
         cursor: pointer;
       }
       .tagible-tooltip {
+        display: block;
+        position: absolute;
         background-color: white;
         box-shadow: 0px 0px 4px 1px #cecece;
         -moz-box-shadow: 0px 0px 4px 1px #cecece;
@@ -18,14 +20,14 @@
         padding: 5px 5px 10px 5px;
         z-index: 100;
       }
-      .tagible-tooltip::after{
+      .tagible-tooltip:after {
         content: "";
         position: absolute;
         width: 0;
         height: 0;
         margin-left: -0.5em;
         bottom: -0.9em;
-        left: 20%;
+        left: 15%;
         box-sizing: border-box;
         border: 7px solid white;
         border-color: transparent transparent white white;
@@ -34,6 +36,9 @@
         box-shadow: -1px 2px 2px 0px #cecece;
         -moz-box-shadow: -1px 2px 2px 0px #cecece;
         -webkit-box-shadow: -1px 2px 2px 0px #cecece;
+      }
+      .tagible-tooltip.right-side:after {
+        left: 85%;
       }
       .media-wrapper {
         float:left;

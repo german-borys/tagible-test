@@ -105,67 +105,71 @@ var entities = [
   var parent_wrapper = 'overwrite-container';
   //add event listener which detects any entity elements
   document.getElementsByClassName(parent_wrapper)[0].addEventListener("mouseover", showTooltip);
-  document.getElementsByClassName(parent_wrapper)[0].addEventListener("mouseout", hideTooltip);
+  document.getElementsByClassName(parent_wrapper)[0].addEventListener("mouseout", removeTooltip);
 
   function showTooltip(e) {
      if (e.target.className == 'entity'){
-       //display tooltip if tooltip exists inside DOM, otherwise build it
-       if (hasTooltip(e.target)) {
-         showHideTooltip(e.target, 'show');
-       } else {
-         var tooltip = createTooltip(e.target);
+         var tooltip = createTooltip(e);
          e.target.appendChild(tooltip);
-       }
      }
   }
 
-  function hideTooltip(e) {
-    if (e.target.className == 'entity') {
-      if (hasTooltip(e.target)) {
-        //find and hide tooltip
-        showHideTooltip(e.target, 'hide');
-      }
-    }
-  }
-
-  function hasTooltip(el) {
-    if (el.hasChildNodes()) {
-      var children = [].slice.call(el.childNodes);
+  function removeTooltip(e) {
+    if (e.target.className == 'entity'){
+      var children = [].slice.call(e.target.childNodes);
       for (i in children) {
-        if (children[i].className == 'tagible-tooltip') {
-           return true;
-        }
+          if (children[i].className == 'tagible-tooltip' || children[i].className == 'tagible-tooltip right-side') {
+             console.log('removing tooltip');
+             e.target.removeChild(children[i]);
+          }
       }
-      return false;
-    } else {
-      return false;
     }
   }
 
-  function showHideTooltip(el, action) {
-    var display = (action == 'show') ? 'block' : 'none';
-    var children = [].slice.call(el.childNodes);
-    for (i in children) {
-        if (children[i].className == 'tagible-tooltip') {
-           children[i].style.display = display;
-        }
-    }
-  }
-
-  function createTooltip(el) {
+  function createTooltip(e) {
     var tooltip = document.createElement('div'),
-      id = el.getAttribute('entity-id'),
-      width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      console.log("Screen Width: " + width);
-      console.log("Left: " + el.offsetLeft);
-      console.log("Top: " + el.offsetTop);
+        leftOffset = e.target.offsetLeft,
+        topOffset = e.target.offsetTop,
+        width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+        rightSideFlag = '',
+        mouseXPos = window.event.pageX;
 
-      tooltip.className = 'tagible-tooltip';
-      tooltip.innerHTML = '<div class="contents"><div class="media-wrapper"><span class="rect"></span>VIDEOS</div><div class="media-wrapper"><span class="rect"></span>PHOTOS</div><div class="media-wrapper"><span class="rect"></span>3D VIEWS</div></div>';
-      tooltip.style.display = 'block';
-      tooltip.style.position = 'absolute';
-      tooltip.style.top = (el.offsetTop - 80) + 'px';
-      tooltip.style.left = (el.offsetLeft + 5) + 'px';
+    //This section determines how to position tooltip considering the position of the parent element
+    //To determine if an entity includes a line-break we look at mouse position in relation to the screen and the parent element
+    //not a pixel perfect solution
+    if (width - leftOffset <= 70) {
+      if (mouseXPos <= 80) {
+        tooltip.style.left = (mouseXPos) + 'px';
+        tooltip.style.top = (topOffset - 60) + 'px';
+      } else {
+        tooltip.style.left = (leftOffset - 140) + 'px';
+        tooltip.style.top = (topOffset - 80) + 'px';
+        rightSideFlag = ' right-side';
+      }
+    } else if (width - leftOffset <= 130) {
+      if (mouseXPos <= 50) {
+        tooltip.style.left = (mouseXPos - 20) + 'px';
+        tooltip.style.top = (topOffset - 60) + 'px';
+      } else if (mouseXPos <= 100) {
+        tooltip.style.left = (mouseXPos - 20) + 'px';
+        tooltip.style.top = (topOffset - 60) + 'px';
+      } else {
+        tooltip.style.left = (leftOffset - 120) + 'px';
+        tooltip.style.top = (topOffset - 80) + 'px';
+        rightSideFlag = ' right-side';
+      }
+    } else if (width - leftOffset <= 180) {
+      tooltip.style.left = (leftOffset - 120) + 'px';
+      tooltip.style.top = (topOffset - 80) + 'px';
+      rightSideFlag = ' right-side';
+    } else {
+      tooltip.style.left = (leftOffset) + 'px';
+      tooltip.style.top = (topOffset - 80) + 'px';
+    }
+
+    tooltip.className = 'tagible-tooltip' + rightSideFlag;
+    tooltip.innerHTML = '<div class="contents"><div class="media-wrapper"><span class="rect"></span>VIDEOS</div><div class="media-wrapper"><span class="rect"></span>PHOTOS</div><div class="media-wrapper"><span class="rect"></span>3D VIEWS</div></div>';
+
     return tooltip;
   }
 
