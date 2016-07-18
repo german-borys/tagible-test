@@ -118,7 +118,6 @@ var tagible = (function TagibleModule(parent_wrapper) {
         var children = [].slice.call(e.target.childNodes);
         for (i in children) {
             if (children[i].className == 'tagible-tooltip' || children[i].className == 'tagible-tooltip right-side') {
-               console.log('removing tooltip');
                e.target.removeChild(children[i]);
             }
         }
@@ -126,12 +125,13 @@ var tagible = (function TagibleModule(parent_wrapper) {
     }
 
     function createTooltip(e) {
+      e = e || window.event;
       var tooltip = document.createElement('div'),
           leftOffset = e.target.offsetLeft,
           topOffset = e.target.offsetTop,
           width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
           rightSideFlag = '',
-          mouseXPos = window.event.pageX;
+          mouseXPos = e.pageX;
 
       //This section determines how to position tooltip considering the position of the parent element
       //To determine if an entity includes a line-break we look at mouse position in relation to the screen and the parent element
